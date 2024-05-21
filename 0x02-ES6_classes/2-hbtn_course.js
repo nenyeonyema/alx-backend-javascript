@@ -1,9 +1,9 @@
 // Implements a class named HolbertonCourse
 export default class HolbertonCourse {
   constructor(name, length, students) {
-    this._name = name;
-    this._length = length;
-    this._students = students;
+    this._name = this._validateName(name);
+    this._length = this._validateName(length);
+    this._students = this._validateName(students);
   }
     // Getters
   get name() {
