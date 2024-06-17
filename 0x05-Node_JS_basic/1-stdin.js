@@ -1,4 +1,5 @@
-console.log("Welcome to Holberton School, what is your name? \n");
+// Process to the standard input
+console.log("Welcome to Holberton School, what is your name?");
 
 // Prepare to handle the standard input
 process.stdin.setEncoding('utf8');
@@ -17,5 +18,5 @@ process.stdin.on('data', (data) => {
 
 // When the input stream ends, display the closing message
 process.stdin.on('end', () => {
-  console.log("This important software is now closing \n");
+  console.log("This important software is now closing");
 });
