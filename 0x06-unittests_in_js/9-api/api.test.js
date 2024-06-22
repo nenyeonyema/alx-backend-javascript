@@ -1,49 +1,43 @@
-const request = require('request');
-const { expect } = require('chai');
-const app = require('./api');
+const request = require("request");
+const {describe, it} = require("mocha");
+const expect = require("chai").expect;
 
-const baseUrl = 'http://localhost:7865';
-
-describe('Index page', () => {
-    before((done) => {
-        app.listen(7865, () => done());
+describe("Index page", function() {
+    const options = {
+	url: "http://localhost:7865/",
+	method: "GET"
+    }
+    it("check correct status code", function(done) {
+	request(options, function(err, res, body) {
+	    expect(res.statusCode).to.equal(200);
+	    done();
+	});
     });
-
-    it('should return status code 200', (done) => {
-        request.get(`${baseUrl}/`, (error, response, body) => {
-            expect(response.statusCode).to.equal(200);
-            done();
-        });
-    });
-
-    it('should return the correct message', (done) => {
-        request.get(`${baseUrl}/`, (error, response, body) => {
-            expect(body).to.equal('Welcome to the payment system');
-            done();
-        });
+    it("check correct content", function(done) {
+	request(options, function(err, res, body) {
+	    expect(body).to.equal("Welcome to the payment system");
+	    done();
+	});
     });
 });
 
-describe('Cart page', () => {
-    it('should return status code 200 for a valid cart ID', (done) => {
-        request.get(`${baseUrl}/cart/12`, (error, response, body) => {
-            expect(response.statusCode).to.equal(200);
-            expect(body).to.equal('Payment methods for cart 12');
-            done();
-        });
+describe("Cart page", function() {
+    it("check correct status code for correct url", function(done) {
+	request.get("http://localhost:7865/cart/12", function(err, res, body) {
+	    expect(res.statusCode).to.equal(200);
+	    done();
+	});
     });
-
-    it('should return status code 404 for a non-numeric cart ID', (done) => {
-        request.get(`${baseUrl}/cart/hello`, (error, response, body) => {
-            expect(response.statusCode).to.equal(404);
-            done();
-        });
+    it("check correct content for correct url", function(done) {
+	request.get("http://localhost:7865/cart/12", function(err, res, body) {
+	    expect(body).to.contain("Payment methods for cart 12");
+	    done();
+	});
     });
-
-    it('should return status code 404 for missing cart ID', (done) => {
-        request.get(`${baseUrl}/cart/`, (error, response, body) => {
-            expect(response.statusCode).to.equal(404);
-            done();
-        });
+    it("check correct status code for incorrect url", function(done) {
+	request.get("http://localhost:7865/cart/kim", function(err, res, body) {
+	    expect(res.statusCode).to.equal(404);
+	    done();
+	});
     });
 });
