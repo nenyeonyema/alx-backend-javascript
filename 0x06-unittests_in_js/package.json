@@ -6,9 +6,12 @@
   "scripts": {
     "test": "mocha"
   },
+  "keywords": [],
   "author": "Genny",
   "license": "ISC",
   "devDependencies": {
-    "mocha": "^10.4.0"
+    "chai": "^5.1.1",
+    "mocha": "^10.4.0",
+    "sinon": "^18.0.0"
   }
 }
