@@ -1,13 +1,13 @@
-// Implement a Class Currency with getter and setters
-
-
 export default class Currency {
-  constructor (code, name) {
+  constructor(code, name) {
     this._code = code;
     this._name = name;
   }
 
-     // Getters and Setters
+  displayFullCurrency() {
+    return `${this._name} (${this._code})`;
+  }
+
   get code() {
     return this._code;
   }
@@ -22,9 +22,5 @@ export default class Currency {
 
   set name(name) {
     this._name = name;
-  }
-
-  displayFullCurrency() {
-    return `${this._name} (${this._code})`
   }
 }
