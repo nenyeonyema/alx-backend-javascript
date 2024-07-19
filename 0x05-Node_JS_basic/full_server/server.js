@@ -1,15 +1,14 @@
-// starts the express server
-// import our routes and connect it to the server
-// with app.use and also exports the serving app
-//
-import express from 'express';
-import router from './routes/index.js';
+const express = require('express');
+
+const router = require('./routes/index');
 
 const app = express();
-const PORT = 1245;
+const port = 1245;
 
 app.use('/', router);
+app.use('/students', router);
+app.use('/students/:major', router);
 
-app.listen(PORT);
+app.listen(port);
 
 export default app;

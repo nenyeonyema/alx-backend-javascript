@@ -1,34 +1,63 @@
 const express = require('express');
-const path = require('path');
-const countStudents = require('./3-1read_file_async');
+
+const { readFile } = require('fs');
 
 const app = express();
-const PORT = 1245;
+const port = 1245;
 
-// Define the root route
-app.get('/', (req, res) => {
-  res.type('text/plain');
-  res.send('Hello Holberton School!');
+function countStudents(fileName) {
+  const students = {};
+  const fields = {};
+  let length = 0;
+  return new Promise((resolve, reject) => {
+    readFile(fileName, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        let output = '';
+        const lines = data.toString().split('\n');
+        for (let i = 0; i < lines.length; i += 1) {
+          if (lines[i]) {
+            length += 1;
+            const field = lines[i].toString().split(',');
+            if (Object.prototype.hasOwnProperty.call(students, field[3])) {
+              students[field[3]].push(field[0]);
+            } else {
+              students[field[3]] = [field[0]];
+            }
+            if (Object.prototype.hasOwnProperty.call(fields, field[3])) {
+              fields[field[3]] += 1;
+            } else {
+              fields[field[3]] = 1;
+            }
+          }
+        }
+        const l = length - 1;
+        output += `Number of students: ${l}\n`;
+        for (const [key, value] of Object.entries(fields)) {
+          if (key !== 'field') {
+            output += `Number of students in ${key}: ${value}. `;
+            output += `List: ${students[key].join(', ')}\n`;
+          }
+        }
+        resolve(output);
+      }
+    });
+  });
+}
+
+app.get('/', (request, response) => {
+  response.send('Hello Holberton School!');
+});
+app.get('/students', (request, response) => {
+  countStudents(process.argv[2].toString()).then((output) => {
+    response.send(['This is the list of our students', output].join('\n'));
+  }).catch(() => {
+    response.send('This is the list of our students\nCannot load the database');
+  });
 });
 
-// Define the /students route
-app.get('/students', async (req, res) => {
-  const filename = path.resolve(process.argv[2]);
-
-  try {
-    const studentData = await countStudents(filename);
-    res.type('text/plain');
-    res.send(`This is the list of our students\n${studentData}`);
-  } catch (error) {
-    res.status(500).type('text/plain');
-    res.send(error.message);
-  }
+app.listen(port, () => {
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
-
-// Export the app for external usage
 module.exports = app;
